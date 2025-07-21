@@ -5,8 +5,13 @@ const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
 const { execSync } = require('child_process');
+const ejs = require('ejs');
+
 
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'static'));
+
 const PORT = 3443;
 
 // Create uploads directory if it doesn't exist
@@ -79,138 +84,11 @@ app.get('/', (req, res) => {
 
 // Login page
 app.get('/login', (req, res) => {
-    res.send(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Secure File Upload</title>
-    <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    const error_element = req.query.error
+        ? '<div class="error">Invalid password. Please try again.</div>'
+        : '';
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
-
-    .container {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        max-width: 400px;
-        width: 100%;
-        text-align: center;
-    }
-
-    h1 {
-        color: #333;
-        margin-bottom: 30px;
-        font-size: 2rem;
-        font-weight: 300;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-        text-align: left;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 5px;
-        color: #555;
-        font-weight: 500;
-    }
-
-    input[type="password"] {
-        width: 100%;
-        padding: 15px;
-        border: 2px solid #e0e0e0;
-        border-radius: 10px;
-        font-size: 1rem;
-        transition: border-color 0.3s ease;
-    }
-
-    input[type="password"]:focus {
-        outline: none;
-        border-color: #667eea;
-    }
-
-    .btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 15px 30px;
-        border-radius: 25px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .error {
-        color: #721c24;
-        background: #f8d7da;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        border: 1px solid #f5c6cb;
-    }
-
-    .nav-link {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        color: white;
-        text-decoration: none;
-        background: rgba(255, 255, 255, 0.2);
-        padding: 10px 20px;
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-    }
-
-    .nav-link:hover {
-        background: rgba(255, 255, 255, 0.3);
-    }
-    </style>
-    </head>
-    <body>
-    <a href="/" class="nav-link">← Back to Upload</a>
-
-    <div class="container">
-    <h1>🔐 Login</h1>
-
-    ${req.query.error ? '<div class="error">Invalid password. Please try again.</div>' : ''}
-
-    <form method="POST" action="/login">
-    <div class="form-group">
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    </div>
-
-    <button type="submit" class="btn">Login</button>
-    </form>
-    </div>
-    </body>
-    </html>
-    `);
+    res.render('login', {error: error_element});
 });
 
 // Handle login
@@ -233,8 +111,8 @@ app.get('/view', requireAuth, (req, res) => {
         return {
             name: filename,
             originalName: filename.replace(/^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z-/, ''),
-                                                 size: stats.size,
-                                                 uploadDate: stats.ctime
+            size: stats.size,
+            uploadDate: stats.ctime
         };
     });
 
@@ -437,8 +315,8 @@ app.get('/view', requireAuth, (req, res) => {
 
     <div class="file-grid" id="fileGrid">
     ${files.length === 0 ?
-        '<div class="empty-state"><div class="empty-icon">📂</div><h3>No files uploaded yet</h3><p>Upload some files to get started!</p></div>' :
-        files.map(file => `
+            '<div class="empty-state"><div class="empty-icon">📂</div><h3>No files uploaded yet</h3><p>Upload some files to get started!</p></div>' :
+            files.map(file => `
         <div class="file-card" data-name="${file.originalName}" data-date="${file.uploadDate.getTime()}" data-size="${file.size}">
         <div class="file-info">
         <div class="file-name">${file.originalName}</div>
@@ -456,7 +334,7 @@ app.get('/view', requireAuth, (req, res) => {
         </div>
         </div>
         `).join('')
-    }
+        }
     </div>
     </div>
 
