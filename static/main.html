@@ -238,9 +238,9 @@
         for (let file of files) {
             const fileItem = document.createElement('div');
             fileItem.className = 'file-item';
-            fileItem.innerHTML = `
-            <span>\${file.name}</span>
-            <span>\${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+            fileItem.innerHTML = `\
+            <span>${file.name}</span>\
+            <span>${(file.size / 1024 / 1024).toFixed(2)} MB</span>\
             `;
             fileList.appendChild(fileItem);
         }
