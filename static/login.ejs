@@ -1,42 +1,24 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Secure File Upload</title>
+    <link rel="stylesheet" href="./styles.css">
     <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
+    /* Unique styles for login.ejs */
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
     }
 
     .container {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
         max-width: 400px;
-        width: 100%;
-        text-align: center;
+        padding: 40px;
     }
-
     h1 {
-        color: #333;
-        margin-bottom: 30px;
         font-size: 2rem;
-        font-weight: 300;
     }
 
     .form-group {
@@ -66,20 +48,9 @@
     }
 
     .btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
+        width: 100%;
         padding: 15px 30px;
         border-radius: 25px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
     }
 
     .error {

@@ -84,6 +84,13 @@ app.get('/', (req, res) => {
     res.send(html_main);
 });
 
+// css style
+app.get('/styles.css', (req, res) => {
+    const css = fs.readFileSync(`./${PATH_STATIC}/styles.css`);
+    res.set('Content-Type', 'text/css');
+    res.send(css);
+});
+
 // Login page
 app.get('/login', (req, res) => {
     const error_element = req.query.error
